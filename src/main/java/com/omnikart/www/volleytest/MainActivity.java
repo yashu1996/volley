@@ -27,6 +27,7 @@ public class MainActivity extends ActionBarActivity {
     TextView view_data;
     Button button_login;
     RequestQueue requestQueue;
+    JSONObject params;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,28 +35,36 @@ public class MainActivity extends ActionBarActivity {
         view_data= (TextView) findViewById(R.id.textView_data);
         button_login = (Button)findViewById(R.id.button_login);
         requestQueue = Volley.newRequestQueue(this);
+        params = new JSONObject();
+        try {
+            params.put("username","yashu1996@gmail.com");
+            params.put("password","yashgupta");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST,"http://testing.omnikart.com/app/index.php",
-                        new Response.Listener<JSONArray>() {
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,"http://testing.omnikart.com/index.php?route=api/login/customerlogin",
+                        params,
+                        new Response.Listener<JSONObject>() {
                             @Override
-                            public void onResponse(JSONArray response) {
+                            public void onResponse(JSONObject response) {
 
                                 try{
-                                    JSONObject obj = response.getJSONObject(0);
                                     String success = null;
-                                    String id = null;
+                                    String cookie = null;
                                     String error = null;
-                                    if(obj.has("success")){
-                                    success = obj.getString("success");}
-                                    if(obj.has("id")){
-                                    id = obj.getString("id");}
-                                    if(obj.has("error")){
-                                    error = obj.getString("error");}
+                                    if(response.has("success")){
+                                    success = response.getString("success");}
+                                    if(response.has("cookie")){
+                                    cookie = response.getString("cookie");}
+                                    if(response.has("error")){
+                                    error = response.getString("error");}
 
 
-                                view_data.append(success+"   1st   \n"+id+"    2nd     \n"+error+"    3rd     \n");
+                                view_data.append(success+"   1st   \n"+cookie+"    2nd     \n"+error+"    3rd     \n");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -69,7 +78,7 @@ public class MainActivity extends ActionBarActivity {
 
 
                         );
-                requestQueue.add(jsonArrayRequest);
+                requestQueue.add(jsonObjectRequest);
             }
         });
     }
