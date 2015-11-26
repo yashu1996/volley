@@ -21,6 +21,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -37,47 +40,49 @@ public class MainActivity extends ActionBarActivity {
         requestQueue = Volley.newRequestQueue(this);
         params = new JSONObject();
         try {
-            params.put("username","yashu1996@gmail.com");
-            params.put("password","yashgupta");
+            params.put("username", "yashu1996@gmail.com");
+            params.put("password", "yashgupta");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,"http://testing.omnikart.com/index.php?route=api/login/customerlogin",
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, "http://testing.omnikart.com/index.php?route=api/login/customerlogin",
                         params,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
 
-                                try{
+                                try {
                                     String success = null;
                                     String cookie = null;
                                     String error = null;
-                                    if(response.has("success")){
-                                    success = response.getString("success");}
-                                    if(response.has("cookie")){
-                                    cookie = response.getString("cookie");}
-                                    if(response.has("error")){
-                                    error = response.getString("error");}
+                                    if (response.has("success")) {
+                                        success = response.getString("success");
+                                    }
+                                    if (response.has("cookie")) {
+                                        cookie = response.getString("cookie");
+                                    }
+                                    if (response.has("error")) {
+                                        error = response.getString("error");
+                                    }
 
 
-                                view_data.append(success+"   1st   \n"+cookie+"    2nd     \n"+error+"    3rd     \n");
+                                    view_data.append(success + "   1st   \n" + cookie + "    2nd     \n" + error + "    3rd     \n");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
-                        },new Response.ErrorListener() {
+                        }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("Volley","Error");
+                        Log.e("Volley", "Error");
                     }
                 }
 
 
-                        );
+                );
                 requestQueue.add(jsonObjectRequest);
             }
         });
